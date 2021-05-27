@@ -1,27 +1,37 @@
 {
-  "name": "perfect-form",
-  "version": "0.0.1",
-  "description": "A complete typescript form object library for human.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/scharpentier0/perfect-form.git"
-  },
-  "keywords": [
-    "form",
-    "typescript",
-    "library"
-  ],
-  "author": "Samuel Charpentier",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/scharpentier0/perfect-form/issues"
-  },
-  "homepage": "https://github.com/scharpentier0/perfect-form#readme",
-  "dependencies": {
-    "uuid": "^8.3.2"
-  }
+	"name": "perfect-form",
+	"version": "0.0.1",
+	"description": "A complete typescript form object library for human.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc",
+		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+		"lint": "tslint -p tsconfig.json"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/scharpentier0/perfect-form.git"
+	},
+	"keywords": [
+		"form",
+		"typescript",
+		"library"
+	],
+	"author": "Samuel Charpentier",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/scharpentier0/perfect-form/issues"
+	},
+	"homepage": "https://github.com/scharpentier0/perfect-form#readme",
+	"files": [
+		"lib/**/*"
+	],
+	"devDependencies": {
+		"prettier": "^2.3.0",
+		"tslint": "^6.1.3",
+		"tslint-config-prettier": "^1.18.0",
+		"typescript": "^4.3.2",
+		"uuid": "^8.3.2"
+	}
 }
