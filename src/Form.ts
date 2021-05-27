@@ -5,4 +5,4 @@ import type { Input } from './Input';
 
 import type { HintsInstruction } from './Hints';
 
-export default class perfectForm {}
+export default class PerfectForm {}

@@ -23,8 +23,7 @@ export class DateInput extends Input {
 	public readOnly?: boolean;
 	constructor(constructorObject: DateInputConstructor) {
 		super(constructorObject);
-		const { value, type, min, max, step, list, readOnly } =
-			constructorObject;
+		const { value, type, min, max, step, list, readOnly } = constructorObject;
 		this.type = type === undefined ? 'datetime' : type;
 		this.value = value !== undefined ? value : '';
 		this.defaultValue = this.value;
@@ -33,15 +32,13 @@ export class DateInput extends Input {
 		this.step = step;
 		this.list = list;
 		if ((type === 'date' || type === 'datetime') && readOnly !== undefined)
-			console.warn(
-				'readonly is not supported on date and datetime input fields',
-			);
+			console.warn('readonly is not supported on date and datetime input fields');
 		this.readOnly = readOnly;
 	}
 	get isValid() {
 		return true;
 	}
 	get getValueAsDate(): Date {
-		return;
+		return new Date();
 	}
 }

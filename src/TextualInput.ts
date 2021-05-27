@@ -18,57 +18,45 @@ export class TextualInput extends Input {
 	public hints: string[];
 	public pattern?: RegExp;
 	public placeholder?: string;
-	public hintsInstructions?: HintsInstruction[];
+	public hintsInstructions: HintsInstruction[];
 	constructor(constructorObject: TextualInputConstructor) {
 		super(constructorObject);
 
-		const {
-			value,
-			pattern,
-			hintsInstructions,
-			placeholder,
-			type,
-			autocomplete,
-			defaultValue,
-		} = constructorObject;
+		const { value, pattern, hintsInstructions, placeholder, type, autocomplete, defaultValue } = constructorObject;
 
 		this.value = value !== undefined ? value : '';
-		this.defaultValue =
-			defaultValue !== undefined ? defaultValue : this.value;
+		this.defaultValue = defaultValue !== undefined ? defaultValue : this.value;
 		this.type = type ? type : 'text';
-		this.autocomplete = autocomplete !== undefined ? autocomplete : true; //true could be changed for a default value for all form fields...
+		this.autocomplete = autocomplete !== undefined ? autocomplete : true; // true could be changed for a default value for all form fields...
 		this.hints = [];
 		this.pattern = pattern ? pattern : this.required ? /.+/ : undefined;
 		this.placeholder = placeholder;
 		this.hintsInstructions =
-			pattern != undefined && hintsInstructions != undefined
+			hintsInstructions !== undefined
 				? hintsInstructions
-				: [
+				: pattern !== undefined
+				? [
 						{
 							regexp: pattern,
 							message: `Doit se conformer à /${pattern}/`,
 						},
-				  ];
+				  ]
+				: [];
 	}
 	updateHint() {
-		for (let instructions of this.hintsInstructions) {
-			instructions.regexp = instructions.regexp
-				? instructions.regexp
-				: this.pattern;
-			let passesRegExpTest = RegExp(instructions.regexp).test(
-				this.value.trim(),
-			);
-			let hintAlreadyShown = this.hints.includes(instructions.message);
+		for (const instruction of this.hintsInstructions) {
+			const passesRegExpTest = RegExp(instruction.regexp).test(this.value.trim());
+			const hintAlreadyShown = this.hints.includes(instruction.message);
 			if (!passesRegExpTest && !hintAlreadyShown) {
-				this.hints.push(instructions.message);
+				this.hints.push(instruction.message);
 			} else if (passesRegExpTest && hintAlreadyShown) {
-				this.hints.splice(this.hints.indexOf(instructions.message), 1);
+				this.hints.splice(this.hints.indexOf(instruction.message), 1);
 			}
 		}
 	}
 	get isValid() {
 		if (!this.required && this.value === '') return true;
-		if (this.pattern.test(this.value.trim())) return true;
+		if (this.pattern !== undefined && this.pattern.test(this.value.trim())) return true;
 		return false;
 	}
 }
