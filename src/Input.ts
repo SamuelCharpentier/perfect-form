@@ -6,6 +6,12 @@ export interface InputConstructor {
 	required?: boolean;
 	id?: string;
 	formID?: string;
+	defaultValue?: any;
+	useValueAsDefaultValue?: boolean;
+}
+
+export interface MaskableInputConstructor extends InputConstructor {
+	mask?: string;
 }
 export interface Input {
 	updateHint?(): void;
@@ -17,7 +23,7 @@ export abstract class Input implements InputConstructor, Input {
 	public id: string = uuidv4();
 	public formID?: string = undefined;
 	abstract isValid: boolean;
-	abstract defaultValue;
+	abstract defaultValue: any;
 
 	constructor(constructorObject: InputConstructor) {
 		const { label, name, id, formID, required } = constructorObject;
@@ -26,5 +32,12 @@ export abstract class Input implements InputConstructor, Input {
 		this.required = required ? required : this.required;
 		this.id = id ? id : this.id;
 		this.formID = formID ? formID : this.formID;
+	}
+}
+export abstract class MaskableInput extends Input implements MaskableInputConstructor, Input {
+	public mask?: string = undefined;
+	constructor(constructorObject: MaskableInputConstructor) {
+		super(constructorObject);
+		this.mask = constructorObject.mask;
 	}
 }

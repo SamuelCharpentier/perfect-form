@@ -1,8 +1,8 @@
-import { Input, InputConstructor } from './Input';
+import { MaskableInputConstructor, MaskableInput } from './Input';
 import type { InputOption } from './Option';
 import type { OptionGroup } from './OptionGroup';
 
-interface DateInputConstructor extends InputConstructor {
+interface DateInputConstructor extends MaskableInputConstructor {
 	type?: 'date' | 'time' | 'datetime' | 'month' | 'week';
 	value?: string;
 	min?: Date;
@@ -12,7 +12,7 @@ interface DateInputConstructor extends InputConstructor {
 	readOnly?: boolean;
 }
 
-export class DateInput extends Input {
+export class DateInput extends MaskableInput {
 	public type: 'date' | 'time' | 'datetime' | 'month' | 'week';
 	public value?: string;
 	public readonly defaultValue: string;

@@ -1,7 +1,7 @@
-import { InputConstructor, Input } from './Input';
-import type { HintsInstruction } from './Hints';
+import { MaskableInputConstructor, MaskableInput } from '@src/Input';
+import type { HintsInstruction } from '@src/Hints';
 
-interface TextualInputConstructor extends InputConstructor {
+interface TextualInputConstructor extends MaskableInputConstructor {
 	value?: string;
 	pattern?: RegExp;
 	autocomplete?: boolean | string;
@@ -10,7 +10,7 @@ interface TextualInputConstructor extends InputConstructor {
 	type?: 'text' | 'textarea';
 	defaultValue?: string;
 }
-export class TextualInput extends Input {
+export class TextualInput extends MaskableInput {
 	public defaultValue: string;
 	public autocomplete: boolean | string;
 	public type: 'text' | 'textarea';
@@ -19,13 +19,24 @@ export class TextualInput extends Input {
 	public pattern?: RegExp;
 	public placeholder?: string;
 	public hintsInstructions: HintsInstruction[];
+
 	constructor(constructorObject: TextualInputConstructor) {
 		super(constructorObject);
 
-		const { value, pattern, hintsInstructions, placeholder, type, autocomplete, defaultValue } = constructorObject;
+		const {
+			value,
+			pattern,
+			hintsInstructions,
+			placeholder,
+			type,
+			autocomplete,
+			defaultValue,
+			useValueAsDefaultValue,
+			mask,
+		} = constructorObject;
 
 		this.value = value !== undefined ? value : '';
-		this.defaultValue = defaultValue !== undefined ? defaultValue : this.value;
+		this.defaultValue = defaultValue !== undefined && this.validate(defaultValue) ? defaultValue : this.value;
 		this.type = type ? type : 'text';
 		this.autocomplete = autocomplete !== undefined ? autocomplete : true; // true could be changed for a default value for all form fields...
 		this.hints = [];
@@ -42,6 +53,7 @@ export class TextualInput extends Input {
 						},
 				  ]
 				: [];
+		this.mask = mask;
 	}
 	updateHint() {
 		for (const instruction of this.hintsInstructions) {
@@ -55,8 +67,12 @@ export class TextualInput extends Input {
 		}
 	}
 	get isValid() {
-		if (!this.required && this.value === '') return true;
-		if (this.pattern !== undefined && this.pattern.test(this.value.trim())) return true;
-		return false;
+		return this.validate(this.value);
+	}
+	private validate(value: string): boolean {
+		if (typeof value !== 'string') return false;
+		if (this.required && this.value === '') return false;
+		if (this.pattern !== undefined && !this.pattern.test(this.value.trim())) return false;
+		return true;
 	}
 }
