@@ -5,8 +5,12 @@
 		"declaration": true,
 		"outDir": "./lib",
 		"strict": true,
-		"lib": ["es2016"]
+		"lib": ["es2016", "dom"],
+		"baseUrl": ".",
+		"paths": {
+			"@src/*": ["src/*"]
+		}
 	},
-	"include": ["src"],
-	"exclude": ["node_modules", "**/__tests__/*"]
+	"include": ["src", "__tests__"],
+	"exclude": ["node_modules"]
 }
