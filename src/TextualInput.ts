@@ -15,7 +15,7 @@ export class TextualInput extends MaskableInput {
 	public autocomplete: boolean | string;
 	public type: 'text' | 'textarea';
 	public value: string;
-	public hints: string[];
+	public hints: string[] = [];
 	public pattern?: RegExp;
 	public placeholder?: string;
 	public hintsInstructions: HintsInstruction[];
