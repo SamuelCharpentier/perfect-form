@@ -11,7 +11,7 @@ interface TextualInputConstructor extends MaskableInputConstructor {
 	defaultValue?: string;
 }
 export class TextualInput extends MaskableInput {
-	public defaultValue: string;
+	public readonly defaultValue: string;
 	public autocomplete: boolean | string;
 	public type: 'text' | 'textarea';
 	public value: string;

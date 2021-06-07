@@ -6,7 +6,7 @@ interface ToggleInputConstructor extends InputConstructor {
 }
 
 export class ToggleInput extends Input {
-	public defaultValue: boolean;
+	public readonly defaultValue: boolean;
 	private _value: boolean;
 	constructor(constructorObject: ToggleInputConstructor) {
 		super(constructorObject);

@@ -53,7 +53,7 @@ interface NumberInputConstructor extends InputConstructor {
 
 export class NumericalInput extends Input {
 	public autocomplete: boolean | string;
-	public defaultValue: string;
+	public readonly defaultValue: string;
 	public type: 'integers' | 'floats';
 	public minVal?: number;
 	public maxVal?: number;
