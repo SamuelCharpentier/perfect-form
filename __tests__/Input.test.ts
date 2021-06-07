@@ -1,5 +1,4 @@
 import { TextualInput } from '@src/TextualInput';
-import { NumericalInput } from '@src/NumericalInput';
 let inputBase = { label: 'My Input', name: 'myInput' };
 
 describe('Input', () => {
@@ -94,6 +93,7 @@ describe('TextualInput', () => {
 	});
 });
 
+import { NumericalInput } from '@src/NumericalInput';
 describe('NumericalInputs', () => {
 	it('Validates numerical string value', () => {
 		let nbrInpt = new NumericalInput({ ...inputBase });
@@ -269,5 +269,20 @@ describe('NumericalInputs', () => {
 		nbrInpt.hintConfig.toggle.increment = false;
 		nbrInpt.updateHint();
 		expect(nbrInpt.hints).not.toContain('this field has to be in increments of 2');
+	});
+});
+import { ToggleInput } from '@src/ToggleInput';
+describe('Toggle Input', () => {
+	it('It toggles', () => {
+		let tglInpt = new ToggleInput({ ...inputBase, initialState: true });
+		expect(tglInpt.value).toBe(true);
+		tglInpt.toggle();
+		expect(tglInpt.value).toBe(false);
+	});
+	it('Requires validates value', () => {
+		let tglInpt = new ToggleInput({ ...inputBase, initialState: true, required: true });
+		expect(tglInpt.isValid).toBe(true);
+		tglInpt.toggle();
+		expect(tglInpt.isValid).toBe(false);
 	});
 });
