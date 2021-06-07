@@ -1,5 +1,5 @@
 import { Input, InputConstructor } from './Input';
-import { InputOption } from './Option';
+import { InputOption } from './InputOption';
 import type { OptionGroup } from './OptionGroup';
 
 interface OptionBasedInputConstructor extends InputConstructor {
@@ -7,24 +7,28 @@ interface OptionBasedInputConstructor extends InputConstructor {
 }
 abstract class OptionBasedInput extends Input {
 	abstract multipleValues: boolean;
-	private _options: (InputOption | OptionGroup)[];
-	public _allOptions: InputOption[];
+	private _options: (InputOption | OptionGroup)[] = [];
+	public _allOptions: InputOption[] = [];
 
 	constructor(constructorObject: OptionBasedInputConstructor) {
 		super(constructorObject);
 		this.options = constructorObject.options;
 	}
 	set options(options: (InputOption | OptionGroup)[]) {
-		this._allOptions = options.reduce((optionsArr: InputOption[], opt) => {
-			if (opt instanceof InputOption) {
-				return [...optionsArr, opt];
-			}
-			return [...optionsArr, ...opt.options];
-		}, []);
+		const cumulateInputOption = (options: (InputOption | OptionGroup)[]): InputOption[] => {
+			return options.reduce((optionsArr: InputOption[], opt) => {
+				if (opt instanceof InputOption) {
+					return [...optionsArr, opt];
+				}
+				return [...optionsArr, ...cumulateInputOption(opt.options)];
+			}, []);
+		};
+		this._allOptions = cumulateInputOption(options);
 		this._allOptions
 			.map((opt) => opt.value)
 			.reduce((duplicateValues: string[], value, index, valueArr) => {
-				if (valueArr.indexOf(value) !== index) duplicateValues = [...new Set([...duplicateValues, value])];
+				if (valueArr.indexOf(value) !== index)
+					duplicateValues = [...Array.from(new Set([...duplicateValues, value]))];
 
 				if (index === valueArr.length - 1) {
 					if (duplicateValues.length > 0) {
@@ -46,7 +50,7 @@ abstract class OptionBasedInput extends Input {
 	}
 	isValidValue(value: string) {
 		return this._allOptions.some(
-			(option) => option.value === value && !option.disabled && !option.optionGroup.disabled,
+			(option) => option.value === value && !option.disabled && !option.optionGroup?.disabled,
 		);
 	}
 }

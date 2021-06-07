@@ -1,5 +1,5 @@
 import { InputConstructor, Input } from './Input';
-import type { InputOption } from './Option';
+import type { InputOption } from './InputOption';
 
 const numberInputDefaultHintTranslation = {
 	thisField: 'this field',

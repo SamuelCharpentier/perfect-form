@@ -1,5 +1,5 @@
 import { MaskableInputConstructor, MaskableInput } from './Input';
-import type { InputOption } from './Option';
+import type { InputOption } from './InputOption';
 import type { OptionGroup } from './OptionGroup';
 
 interface DateInputConstructor extends MaskableInputConstructor {
