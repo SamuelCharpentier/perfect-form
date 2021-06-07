@@ -21,6 +21,8 @@ export class InputOption {
 		preSelected?: boolean;
 		optionGroup?: OptionGroup;
 	}) {
+		if (typeof value !== 'string' || value === '')
+			throw new Error('A string value with a minimum length of 1 character must be provided for each options');
 		this.value = value;
 		this.label = label;
 		this.disabled = disabled;

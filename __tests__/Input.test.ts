@@ -286,3 +286,70 @@ describe('Toggle Input', () => {
 		expect(tglInpt.isValid).toBe(false);
 	});
 });
+
+import { InputOption } from '@src/InputOption';
+import { OptionGroup } from '@src/OptionGroup';
+
+describe('Input Option', () => {
+	it('requires at least a value', () => {
+		expect(() => {
+			new InputOption({ label: 'option 1' });
+		}).toThrow('A string value with a minimum length of 1 character must be provided for each options');
+		expect(() => {
+			new InputOption({ label: 'option 1', value: '1' });
+		}).not.toThrow('A string value with a minimum length of 1 character must be provided for each options');
+	});
+	it("Can be disabled but isn't by default & disabled can be updated", () => {
+		let option = new InputOption({ label: 'option 1', value: '1' });
+		expect(option.disabled).toBe(false);
+		option.disabled = true;
+		expect(option.disabled).toBe(true);
+		option = new InputOption({ value: '2', disabled: true });
+		expect(option.disabled).toBe(true);
+	});
+	it("Can be pre-selected but isn't by default & pre-selection can be updated", () => {
+		let option = new InputOption({ label: 'option 1', value: '1' });
+		expect(option.preSelected).toBe(false);
+		option.preSelected = true;
+		expect(option.preSelected).toBe(true);
+		option = new InputOption({ label: 'option 1', value: '1', preSelected: true });
+		expect(option.preSelected).toBe(true);
+	});
+});
+
+let opt1 = new InputOption({ label: 'first option', value: '1' });
+let opt2 = new InputOption({ label: 'second option', value: '2' });
+let optGroup1 = new OptionGroup({ label: 'first group', disabled: false, options: [opt1, opt2] });
+let myOptionsArray: (InputOption | OptionGroup)[] = [opt1, opt2];
+
+import { SingleOptionInput } from '@src/OptionInputs';
+import { MultiOptionInput } from '@src/OptionInputs';
+import { Input } from '@src/Input';
+describe('Option Based Input', () => {
+	let optionBasedInputs = [SingleOptionInput, MultiOptionInput];
+	optionBasedInputs.forEach((OptionBasedInput) => {
+		it('Requires options to initialize', () => {
+			expect(() => {
+				new OptionBasedInput({ ...inputBase });
+			}).toThrow('Options are required for initialisation of option based input');
+			expect(() => {
+				new OptionBasedInput({ ...inputBase, options: [] });
+			}).toThrow('Options are required for initialisation of option based input');
+			expect(() => {
+				new OptionBasedInput({ ...inputBase, options: myOptionsArray });
+			}).not.toThrow('Options are required for initialisation of option based input');
+		});
+
+		it('Requires every options to have different values', () => {
+			expect(() => {
+				new OptionBasedInput({ ...inputBase, options: [opt1, opt1] });
+			}).toThrow('All Options of option based Inputs must have unique values');
+			expect(() => {
+				new OptionBasedInput({ ...inputBase, options: myOptionsArray });
+			}).not.toThrow('All Options of option based Inputs must have unique values');
+		});
+	});
+});
+
+describe('Single Option Input', () => {});
+describe('Multi-Option Input', () => {});
