@@ -129,7 +129,7 @@ export class NumericalInput extends Input {
 		return this.minVal !== undefined && this.hintConfig.toggle.min;
 	}
 	private get needsToShowMaxHint() {
-		return this.minVal !== undefined && this.hintConfig.toggle.min;
+		return this.minVal !== undefined && this.hintConfig.toggle.max;
 	}
 	private get needsToShowIncrementHint() {
 		return this.incrementStep !== undefined && this.hintConfig.toggle.increment;
@@ -137,52 +137,33 @@ export class NumericalInput extends Input {
 	private addToHints(message: string) {
 		if (!this.hints.includes(message)) this.hints.push(message);
 	}
-	private removeFromHints(message: string) {
-		if (this.hints.includes(message)) this.hints.splice(this.hints.indexOf(message), 1);
-	}
 	updateHint() {
+		this.hints = [];
 		const msg = this.hintConfig.translation;
-		if (this.needsToShowRequiredHint) {
+		if (this.needsToShowRequiredHint && !this.isValid) {
 			let hintMessageRequired = `${msg.thisField} ${msg.isRequired}`;
-			if (!this.isValid) {
-				this.addToHints(hintMessageRequired);
-			} else {
-				this.removeFromHints(hintMessageRequired);
-			}
+			this.addToHints(hintMessageRequired);
 		}
 		if (this.needsToShowMinHint || this.needsToShowMaxHint) {
 			let hintMessageMinMax = `${msg.thisField} ${msg.hasToBe} ${msg.between} ${this.minVal} ${msg.and} ${this.maxVal}`;
 			let hintMessageMin = `${msg.thisField} ${msg.hasToBe} ${msg.moreThan} ${this.minVal}`;
 			let hintMessageMax = `${msg.thisField} ${msg.hasToBe} ${msg.lessThan} ${this.maxVal}`;
 			if (this.valueAsNumber === undefined) {
-				if (this.needsToShowMinHint && this.needsToShowMinHint) {
+				if (this.needsToShowMinHint && this.needsToShowMaxHint) {
 					this.addToHints(hintMessageMinMax);
-				} else {
-					this.removeFromHints(hintMessageMinMax);
 				}
 				if (this.needsToShowMinHint && !this.needsToShowMaxHint) {
 					this.addToHints(hintMessageMin);
-				} else {
-					this.removeFromHints(hintMessageMin);
 				}
 				if (this.needsToShowMaxHint && !this.needsToShowMinHint) {
 					this.addToHints(hintMessageMax);
-				} else {
-					this.removeFromHints(hintMessageMax);
 				}
 			} else {
-				if (this.needsToShowMinHint && this.needsToShowMaxHint) {
-					this.removeFromHints(hintMessageMinMax);
-				}
 				if (this.needsToShowMinHint && this.minVal && this.valueAsNumber < this.minVal) {
 					this.addToHints(hintMessageMin);
-				} else {
-					this.removeFromHints(hintMessageMin);
 				}
 				if (this.needsToShowMaxHint && this.maxVal && this.valueAsNumber > this.maxVal) {
 					this.addToHints(hintMessageMax);
-				} else {
-					this.removeFromHints(hintMessageMax);
 				}
 			}
 			if (this.needsToShowIncrementHint) {
@@ -193,21 +174,8 @@ export class NumericalInput extends Input {
 					this.valueAsNumber % this.incrementStep !== 0
 				) {
 					this.addToHints(hintMessageIncrement);
-				} else {
-					this.removeFromHints(hintMessageIncrement);
 				}
 			}
-
-			// if (this?.valueAsNumber < this?.minVal || this?.valueAsNumber > this?.maxVal) {
-			// 	if (tgl.min && tgl.max && this.minVal !== undefined && this.maxVal !== undefined) {
-			// 		this.addToHints(
-			// 			`${msg.thisField} ${msg.hasToBe} ${msg.between} ${this.minVal} ${msg.and} ${this.maxVal}`,
-			// 		);
-			// 	}
-			// 	if (tgl.min && this.valueAsNumber < this.minVal) {
-			// 		this.addToHints(`${msg.thisField} ${msg.hasToBe} ${msg.above} ${this.minVal}`);
-			// 	}
-			// }
 		}
 	}
 

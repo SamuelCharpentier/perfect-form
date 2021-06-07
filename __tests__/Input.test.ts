@@ -216,7 +216,7 @@ describe('NumericalInputs', () => {
 			moreThan: 'plus de',
 			between: 'entre',
 			and: 'et',
-			inIncrementsOf: 'en incréments de',
+			inIncrementsOf: 'par incréments de',
 		};
 		let nbrInpt = new NumericalInput({
 			...inputBase,
@@ -232,13 +232,42 @@ describe('NumericalInputs', () => {
 		nbrInpt.value = '3';
 		nbrInpt.updateHint();
 		expect(nbrInpt.hints).toContain('ce champ doit être plus de 5');
-		expect(nbrInpt.hints).toContain('ce champ doit être en incréments de 2');
+		expect(nbrInpt.hints).toContain('ce champ doit être par incréments de 2');
 		nbrInpt.value = '25';
 		nbrInpt.updateHint();
 		expect(nbrInpt.hints).toContain('ce champ doit être moins de 20');
-		expect(nbrInpt.hints).toContain('ce champ doit être en incréments de 2');
+		expect(nbrInpt.hints).toContain('ce champ doit être par incréments de 2');
 		nbrInpt.value = '10';
 		nbrInpt.updateHint();
 		expect(nbrInpt.hints).toStrictEqual([]);
+	});
+	it('Allows toggling the hints', () => {
+		let myHintToggle = { required: false };
+		let nbrInpt = new NumericalInput({
+			...inputBase,
+			required: true,
+			incrementStep: 2,
+			minVal: 5,
+			maxVal: 20,
+			hintConfig: { toggle: myHintToggle },
+		});
+		nbrInpt.updateHint();
+		expect(nbrInpt.hints).not.toContain('this field is required');
+		nbrInpt.hintConfig.toggle.max = false;
+		nbrInpt.hintConfig.toggle.required = true;
+		nbrInpt.updateHint();
+		expect(nbrInpt.hints).not.toContain('this field has to be between 5 and 20');
+		expect(nbrInpt.hints).toContain('this field has to be more than 5');
+		nbrInpt.hintConfig.toggle.min = false;
+		nbrInpt.hintConfig.toggle.max = true;
+		nbrInpt.updateHint();
+		expect(nbrInpt.hints).not.toContain('this field has to be between 5 and 20');
+		expect(nbrInpt.hints).toContain('this field has to be less than 20');
+		nbrInpt.value = 3;
+		nbrInpt.updateHint();
+		expect(nbrInpt.hints).toContain('this field has to be in increments of 2');
+		nbrInpt.hintConfig.toggle.increment = false;
+		nbrInpt.updateHint();
+		expect(nbrInpt.hints).not.toContain('this field has to be in increments of 2');
 	});
 });
